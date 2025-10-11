@@ -1,33 +1,59 @@
 import { Elysia } from "elysia";
 import { staticPlugin } from "@elysiajs/static";
 import { exec } from "child_process";
-import { watch } from "fs";
+import { FSWatcher, PathLike, watch, WatchOptionsWithStringEncoding } from "fs";
 import { Logestic } from "logestic";
 import html from "@elysiajs/html";
 
 import routeHandler from "./routes/handler";
 import cors from "@elysiajs/cors";
 
-const buildCSS = () =>
-  new Promise((resolve) =>
+const buildClient = (type?: "css" | "js") => {
+  const types = {
+    css: "tailwindcss -i ./src/globals.css -o ./public/css/index.css",
+    js: "bun build --minify --target=browser --outfile=public/js/index.js ./src/client/main.ts",
+  };
+  return new Promise((resolve) =>
     exec(
-      "tailwindcss -i ./src/globals.css -o ./public/index.css",
+      type != undefined ? types[type] : `${types.css} && ${types.js}`,
       (_error, _stdout, stderr) => {
         console.log(stderr);
         resolve(null);
       }
     )
   );
+};
 
-await buildCSS();
+await buildClient();
 
 if (Bun.env.NODE_ENV != "production") {
-  const watcher = watch("./src/globals.css", {}, async () => {
-    await buildCSS();
-  });
+  const watchers = (
+    [
+      {
+        path: "./src/globals.css",
+        config: {},
+        type: "css",
+      },
+      {
+        path: "./src/client",
+        config: {
+          recursive: true,
+        },
+        type: "js",
+      },
+    ] as {
+      path: PathLike;
+      config?: WatchOptionsWithStringEncoding | BufferEncoding | null;
+      type?: "css" | "js";
+    }[]
+  ).map((option) =>
+    watch(option.path, option.config, async () => {
+      await buildClient(option.type);
+    })
+  );
 
   process.on("SIGINT", () => {
-    watcher.close();
+    watchers.forEach((watcher) => watcher.close());
     process.exit(0);
   });
 }

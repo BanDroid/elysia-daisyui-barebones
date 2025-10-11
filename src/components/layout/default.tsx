@@ -10,7 +10,8 @@ export default ({ children }: PropsWithChildren) => {
         <title>Portfolio</title>
         <meta name="description" content="Ban" />
 
-        <link rel="stylesheet" href="/index.css" />
+        <link rel="stylesheet" href="/css/index.css" />
+        <script src="/js/index.js" defer></script>
       </head>
       <body>{children}</body>
     </html>
