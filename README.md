@@ -17,3 +17,7 @@ bun dev
 ```
 
 Open http://localhost:3000/ with your browser to see the result.
+
+## Note
+
+the `src/client` folder is scripts for the client side javascript, this is different from components, routes, etc. this folder is not server rendered, the output of this file will be `public/js/index.js` for your page interactivity, adding listener, browser related thingy.
