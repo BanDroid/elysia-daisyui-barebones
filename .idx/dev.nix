@@ -6,10 +6,12 @@
   packages = [
     pkgs.nodejs_20
   ];
-  idx.workspace.onCreate = {
-    bun-setup = "curl -fsSL https://bun.sh/install | bash && bun install";
-    # files to open when the workspace is first opened.
-    default.openFiles = [ "src/index.ts" ];
+  idx.workspace = {
+    onCreate = {
+      bun-setup = "curl -fsSL https://bun.sh/install | bash && source $HOME/.bashrc && bun install";
+      # files to open when the workspace is first opened.
+      default.openFiles = [ "src/index.ts" ];
+    };
   };
   idx.extensions = [
     "esbenp.prettier-vscode"
