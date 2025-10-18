@@ -8,14 +8,14 @@ import html from "@elysiajs/html";
 import routeHandler from "./routes/handler";
 import cors from "@elysiajs/cors";
 
-const buildClient = (type?: "css" | "js") => {
+const buildClient = (type?: "css" | "ts") => {
   const types = {
     css: "tailwindcss -i ./src/globals.css -o ./public/css/index.css",
-    js: "bun build --minify --target=browser --outfile=public/js/index.js ./src/client/main.ts",
+    ts: "bun build --minify --target=browser --outfile=public/js/index.js ./src/client/main.ts",
   };
   return new Promise((resolve) =>
     exec(
-      type != undefined ? types[type] : `${types.css} && ${types.js}`,
+      type != undefined ? types[type] : `${types.css} && ${types.ts}`,
       (_error, _stdout, stderr) => {
         console.log(stderr);
         resolve(null);
@@ -39,12 +39,12 @@ if (Bun.env.NODE_ENV != "production") {
         config: {
           recursive: true,
         },
-        type: "js",
+        type: "ts",
       },
     ] as {
       path: PathLike;
       config?: WatchOptionsWithStringEncoding | BufferEncoding | null;
-      type?: "css" | "js";
+      type?: "css" | "ts";
     }[]
   ).map((option) =>
     watch(option.path, option.config, async () => {
