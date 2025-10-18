@@ -1,0 +1,10 @@
+{
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true,
+    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.editor.enablePreview": false,
+    "workbench.sideBar.location": "right",
+    "window.autoDetectColorScheme": false,
+    "files.autoSave": "off",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+}
